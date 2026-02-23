@@ -1,0 +1,48 @@
+# Dependencies (not needed in published package)
+node_modules/
+pnpm-store/
+
+# Source files (only dist is needed)
+src/
+test/
+docs/
+
+# Configuration files
+vitest.config.ts
+tsconfig.json
+tsconfig.dev.json
+.eslintrc.cjs
+.prettierrc.json
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Environment
+.env*
+
+# Coverage
+coverage/
+
+# Build artifacts
+*.tsbuildinfo
+
+# Test fixtures
+src/__fixtures__/
+
+# Documentation
+CHANGELOG.md
+ROADMAP.md
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+SECURITY.md
+
+# AGENTS.md (project-specific)
+AGENTS.md
