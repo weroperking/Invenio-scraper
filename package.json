@@ -1,6 +1,6 @@
 {
   "name": "@weroperking/invenio-scraper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "invenio-scraper - A web scraping library for extracting movie and TV show data",
   "type": "module",
   "main": "dist/index.js",
