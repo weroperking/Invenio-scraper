@@ -1,6 +1,6 @@
 # API Reference
 
-This document provides detailed API documentation for `moviebox-js-sdk`, including full method signatures, parameters, return types, and usage examples.
+This document provides detailed API documentation for `@weroperking/invenio-scraper`, including full method signatures, parameters, return types, and usage examples.
 
 ---
 
@@ -24,7 +24,7 @@ This document provides detailed API documentation for `moviebox-js-sdk`, includi
 The main session class for interacting with the MovieBox API. Handles HTTP requests, cookie management, mirror fallback, and retry logic.
 
 ```typescript
-import { MovieboxSession, createLogger } from 'moviebox-js-sdk';
+import { MovieboxSession, createLogger } from '@weroperking/invenio-scraper';
 
 const session = new MovieboxSession({
   host: 'h5.aoneroom.com',
@@ -37,6 +37,8 @@ const session = new MovieboxSession({
   }
 });
 ```
+
+> **Note:** Use `tsx` to run TypeScript files directly. For example: `npx tsx your-script.ts`
 
 #### Constructor
 
@@ -193,13 +195,22 @@ async ensureSessionCookies(): Promise<boolean>
 Searches for movies, TV series, or music.
 
 ```typescript
-import { search } from 'moviebox-js-sdk';
+import { search } from '@weroperking/invenio-scraper';
 
-const results = await search(session, { 
-  query: 'Merlin', 
-  type: 'movie', 
-  page: 1,
-  perPage: 24 
+async function main(): Promise<void> {
+  const results = await search(session, { 
+    query: 'Merlin', 
+    type: 'movie', 
+    page: 1,
+    perPage: 24 
+  });
+  
+  console.log(results);
+}
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
 });
 ```
 
@@ -262,10 +273,19 @@ interface NormalizedSearchResult {
 Retrieves detailed information about a movie.
 
 ```typescript
-import { getMovieDetails } from 'moviebox-js-sdk';
+import { getMovieDetails } from '@weroperking/invenio-scraper';
 
-const details = await getMovieDetails(session, { 
-  detailPath: 'titanic-m7a9yt0abq6' 
+async function main(): Promise<void> {
+  const details = await getMovieDetails(session, { 
+    detailPath: 'titanic-m7a9yt0abq6' 
+  });
+  
+  console.log(details);
+}
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
 });
 ```
 
@@ -319,11 +339,20 @@ interface MovieDetails {
 Gets streaming URL for a movie.
 
 ```typescript
-import { getMovieStreamUrl } from 'moviebox-js-sdk';
+import { getMovieStreamUrl } from '@weroperking/invenio-scraper';
 
-const result = await getMovieStreamUrl(session, {
-  detailPath: 'titanic-m7a9yt0abq6',
-  quality: 'best'  // or 'worst', or a number like 1080
+async function main(): Promise<void> {
+  const result = await getMovieStreamUrl(session, {
+    detailPath: 'titanic-m7a9yt0abq6',
+    quality: 'best'  // or 'worst', or a number like 1080
+  });
+  
+  console.log(result);
+}
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
 });
 ```
 
@@ -385,18 +414,27 @@ interface StreamOption {
 Downloads a movie to the local filesystem.
 
 ```typescript
-import { downloadMovie } from 'moviebox-js-sdk';
+import { downloadMovie } from '@weroperking/invenio-scraper';
 
-const destination = await downloadMovie(session, {
-  detailPath: 'titanic-m7a9yt0abq6',
-  quality: 'best',
-  outputDir: './downloads',
-  mode: 'auto',
-  parallel: 4,
-  chunkSize: 4 * 1024 * 1024,  // 4 MiB
-  onProgress: (progress) => {
-    console.log(`Downloaded: ${progress.percentage}%`);
-  }
+async function main(): Promise<void> {
+  const destination = await downloadMovie(session, {
+    detailPath: 'titanic-m7a9yt0abq6',
+    quality: 'best',
+    outputDir: './downloads',
+    mode: 'auto',
+    parallel: 4,
+    chunkSize: 4 * 1024 * 1024,  // 4 MiB
+    onProgress: (progress) => {
+      console.log(`Downloaded: ${progress.percentage}%`);
+    }
+  });
+  
+  console.log(`Downloaded to: ${destination}`);
+}
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
 });
 ```
 
@@ -434,10 +472,19 @@ async function downloadMovie(
 Retrieves detailed information about a TV series.
 
 ```typescript
-import { getSeriesDetails } from 'moviebox-js-sdk';
+import { getSeriesDetails } from '@weroperking/invenio-scraper';
 
-const details = await getSeriesDetails(session, { 
-  detailPath: 'merlin-b8z92m3k5w1' 
+async function main(): Promise<void> {
+  const details = await getSeriesDetails(session, { 
+    detailPath: 'merlin-b8z92m3k5w1' 
+  });
+  
+  console.log(details);
+}
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
 });
 ```
 
@@ -494,12 +541,21 @@ interface SeriesSeasonSummary {
 Gets available download qualities for a specific episode.
 
 ```typescript
-import { getEpisodeQualities } from 'moviebox-js-sdk';
+import { getEpisodeQualities } from '@weroperking/invenio-scraper';
 
-const qualities = await getEpisodeQualities(session, {
-  detailPath: 'merlin-b8z92m3k5w1',
-  season: 1,
-  episode: 1
+async function main(): Promise<void> {
+  const qualities = await getEpisodeQualities(session, {
+    detailPath: 'merlin-b8z92m3k5w1',
+    season: 1,
+    episode: 1
+  });
+  
+  console.log(qualities);
+}
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
 });
 ```
 
@@ -539,13 +595,22 @@ interface EpisodeQualities {
 Gets streaming URL for a specific episode.
 
 ```typescript
-import { getEpisodeStreamUrl } from 'moviebox-js-sdk';
+import { getEpisodeStreamUrl } from '@weroperking/invenio-scraper';
 
-const result = await getEpisodeStreamUrl(session, {
-  detailPath: 'merlin-b8z92m3k5w1',
-  season: 1,
-  episode: 1,
-  quality: 1080
+async function main(): Promise<void> {
+  const result = await getEpisodeStreamUrl(session, {
+    detailPath: 'merlin-b8z92m3k5w1',
+    season: 1,
+    episode: 1,
+    quality: 1080
+  });
+  
+  console.log(result);
+}
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
 });
 ```
 
@@ -575,14 +640,23 @@ async function getEpisodeStreamUrl(
 Downloads a specific episode to the local filesystem.
 
 ```typescript
-import { downloadEpisode } from 'moviebox-js-sdk';
+import { downloadEpisode } from '@weroperking/invenio-scraper';
 
-const destination = await downloadEpisode(session, {
-  detailPath: 'merlin-b8z92m3k5w1',
-  season: 1,
-  episode: 1,
-  quality: 'best',
-  outputDir: './downloads'
+async function main(): Promise<void> {
+  const destination = await downloadEpisode(session, {
+    detailPath: 'merlin-b8z92m3k5w1',
+    season: 1,
+    episode: 1,
+    quality: 'best',
+    outputDir: './downloads'
+  });
+  
+  console.log(`Downloaded: ${destination}`);
+}
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
 });
 ```
 
@@ -622,18 +696,25 @@ async function downloadEpisode(
 Low-level function to download a media file from a specific URL.
 
 ```typescript
-import { downloadMediaFile } from 'moviebox-js-sdk';
+import { downloadMediaFile } from '@weroperking/invenio-scraper';
 
-await downloadMediaFile(
-  session,
-  { id: '123', resolution: 1080, quality: '1080p', sizeBytes: 1500000000, url: 'https://...' },
-  './output.mp4',
-  {
-    mode: 'auto',
-    parallel: 4,
-    onProgress: (progress) => console.log(progress.percentage)
-  }
-);
+async function main(): Promise<void> {
+  await downloadMediaFile(
+    session,
+    { id: '123', resolution: 1080, quality: '1080p', sizeBytes: 1500000000, url: 'https://...' },
+    './output.mp4',
+    {
+      mode: 'auto',
+      parallel: 4,
+      onProgress: (progress) => console.log(progress.percentage)
+    }
+  );
+}
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
+});
 ```
 
 #### Function Signature
@@ -697,7 +778,7 @@ interface DownloadProgress {
 Creates a Pino-based logger instance.
 
 ```typescript
-import { createLogger } from 'moviebox-js-sdk';
+import { createLogger } from '@weroperking/invenio-scraper';
 
 const logger = createLogger({
   level: 'debug',           // Log level
@@ -731,7 +812,7 @@ type Logger = Pick<ReturnType<typeof pinoLogger>, 'debug' | 'info' | 'warn' | 'e
 Creates a no-op logger for testing or when logging is not needed.
 
 ```typescript
-import { createNoopLogger } from 'moviebox-js-sdk';
+import { createNoopLogger } from '@weroperking/invenio-scraper';
 
 const noopLogger = createNoopLogger();
 ```

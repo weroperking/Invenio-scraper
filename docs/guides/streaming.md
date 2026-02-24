@@ -2,6 +2,8 @@
 
 This guide covers getting stream URLs for movies and episodes, quality selection, and integration with media players.
 
+> **Note:** Use `tsx` to run TypeScript files directly. For example: `npx tsx your-script.ts`
+
 ---
 
 ## Table of Contents
@@ -30,32 +32,46 @@ The SDK provides functions to get streaming URLs for movies and episodes. These 
 ### Movie Streams
 
 ```typescript
-import { getMovieStreamUrl, createLogger } from 'moviebox-js-sdk';
+import { MovieboxSession, getMovieStreamUrl, createLogger } from '@weroperking/invenio-scraper';
 
 const session = new MovieboxSession({
   logger: createLogger({ level: 'info' })
 });
 
-const result = await getMovieStreamUrl(session, {
-  detailPath: 'titanic-m7a9yt0abq6'
-});
+async function main(): Promise<void> {
+  const result = await getMovieStreamUrl(session, {
+    detailPath: 'titanic-m7a9yt0abq6'
+  });
 
-console.log('Stream URL:', result.stream?.url);
-console.log('Quality:', result.stream?.quality);
+  console.log('Stream URL:', result.stream?.url);
+  console.log('Quality:', result.stream?.quality);
+}
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
+});
 ```
 
 ### Episode Streams
 
 ```typescript
-import { getEpisodeStreamUrl } from 'moviebox-js-sdk';
+import { getEpisodeStreamUrl } from '@weroperking/invenio-scraper';
 
-const result = await getEpisodeStreamUrl(session, {
-  detailPath: 'merlin-b8z92m3k5w1',
-  season: 1,
-  episode: 1
+async function main(): Promise<void> {
+  const result = await getEpisodeStreamUrl(session, {
+    detailPath: 'merlin-b8z92m3k5w1',
+    season: 1,
+    episode: 1
+  });
+
+  console.log('Stream URL:', result.stream?.url);
+}
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
 });
-
-console.log('Stream URL:', result.stream?.url);
 ```
 
 ### Response Structure
@@ -78,54 +94,81 @@ interface StreamResult {
 ### Automatic Best Quality
 
 ```typescript
-// Default - gets best quality
-const result = await getMovieStreamUrl(session, {
-  detailPath: 'movie-id',
-  // quality defaults to 'best'
-});
+import { getMovieStreamUrl } from '@weroperking/invenio-scraper';
 
-console.log(result.stream?.quality); // e.g., "1080p"
+async function main(): Promise<void> {
+  // Default - gets best quality
+  const result = await getMovieStreamUrl(session, {
+    detailPath: 'movie-id',
+    // quality defaults to 'best'
+  });
+
+  console.log(result.stream?.quality); // e.g., "1080p"
+}
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
+});
 ```
 
 ### Explicit Quality Selection
 
 ```typescript
-// Best quality
-const best = await getMovieStreamUrl(session, {
-  detailPath: 'movie-id',
-  quality: 'best'
-});
+import { getMovieStreamUrl } from '@weroperking/invenio-scraper';
 
-// Worst quality (lowest bandwidth)
-const worst = await getMovieStreamUrl(session, {
-  detailPath: 'movie-id',
-  quality: 'worst'
-});
+async function main(): Promise<void> {
+  // Best quality
+  const best = await getMovieStreamUrl(session, {
+    detailPath: 'movie-id',
+    quality: 'best'
+  });
 
-// Specific resolution
-const hd = await getMovieStreamUrl(session, {
-  detailPath: 'movie-id',
-  quality: 1080  // 1080p
-});
+  // Worst quality (lowest bandwidth)
+  const worst = await getMovieStreamUrl(session, {
+    detailPath: 'movie-id',
+    quality: 'worst'
+  });
 
-const sd = await getMovieStreamUrl(session, {
-  detailPath: 'movie-id',
-  quality: 480  // 480p
+  // Specific resolution
+  const hd = await getMovieStreamUrl(session, {
+    detailPath: 'movie-id',
+    quality: 1080  // 1080p
+  });
+
+  const sd = await getMovieStreamUrl(session, {
+    detailPath: 'movie-id',
+    quality: 480  // 480p
+  });
+}
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
 });
 ```
 
 ### List Available Qualities
 
 ```typescript
-const result = await getMovieStreamUrl(session, {
-  detailPath: 'movie-id'
-});
+import { getMovieStreamUrl } from '@weroperking/invenio-scraper';
 
-console.log('Available qualities:');
-for (const option of result.options) {
-  const sizeGB = (option.sizeBytes / 1024 / 1024 / 1024).toFixed(2);
-  console.log(`  ${option.quality} - ${sizeGB} GB - ${option.format}`);
+async function main(): Promise<void> {
+  const result = await getMovieStreamUrl(session, {
+    detailPath: 'movie-id'
+  });
+
+  console.log('Available qualities:');
+  for (const option of result.options) {
+    const sizeGB = (option.sizeBytes / 1024 / 1024 / 1024).toFixed(2);
+    console.log(`  ${option.quality} - ${sizeGB} GB - ${option.format}`);
+  }
 }
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
+});
 ```
 
 ### Fallback Quality Logic
@@ -133,13 +176,22 @@ for (const option of result.options) {
 If the requested quality is not available, the SDK automatically selects the next best option:
 
 ```typescript
-// Request 4K but only 1080p available
-const result = await getMovieStreamUrl(session, {
-  detailPath: 'movie-id',
-  quality: 2160  // Requesting 4K
-});
+import { getMovieStreamUrl } from '@weroperking/invenio-scraper';
 
-console.log(result.stream?.quality); // "1080p" (best available)
+async function main(): Promise<void> {
+  // Request 4K but only 1080p available
+  const result = await getMovieStreamUrl(session, {
+    detailPath: 'movie-id',
+    quality: 2160  // Requesting 4K
+  });
+
+  console.log(result.stream?.quality); // "1080p" (best available)
+}
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
+});
 ```
 
 ---
@@ -149,55 +201,82 @@ console.log(result.stream?.quality); // "1080p" (best available)
 ### Access Stream Information
 
 ```typescript
-const result = await getMovieStreamUrl(session, {
-  detailPath: 'movie-id'
-});
+import { getMovieStreamUrl } from '@weroperking/invenio-scraper';
 
-const stream = result.stream;
+async function main(): Promise<void> {
+  const result = await getMovieStreamUrl(session, {
+    detailPath: 'movie-id'
+  });
 
-if (stream) {
-  console.log('Stream Details:');
-  console.log(`  ID: ${stream.id}`);
-  console.log(`  Resolution: ${stream.resolution}p`);
-  console.log(`  Quality: ${stream.quality}`);
-  console.log(`  Size: ${(stream.sizeBytes / 1024 / 1024).toFixed(2)} MB`);
-  console.log(`  Duration: ${Math.floor(stream.durationSeconds / 60)} minutes`);
-  console.log(`  Format: ${stream.format}`);
-  console.log(`  Codec: ${stream.codec}`);
-  console.log(`  URL: ${stream.url}`);
+  const stream = result.stream;
+
+  if (stream) {
+    console.log('Stream Details:');
+    console.log(`  ID: ${stream.id}`);
+    console.log(`  Resolution: ${stream.resolution}p`);
+    console.log(`  Quality: ${stream.quality}`);
+    console.log(`  Size: ${(stream.sizeBytes / 1024 / 1024).toFixed(2)} MB`);
+    console.log(`  Duration: ${Math.floor(stream.durationSeconds / 60)} minutes`);
+    console.log(`  Format: ${stream.format}`);
+    console.log(`  Codec: ${stream.codec}`);
+    console.log(`  URL: ${stream.url}`);
+  }
 }
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
+});
 ```
 
 ### Check Availability
 
 ```typescript
-const result = await getMovieStreamUrl(session, {
-  detailPath: 'movie-id'
+import { getMovieStreamUrl } from '@weroperking/invenio-scraper';
+
+async function main(): Promise<void> {
+  const result = await getMovieStreamUrl(session, {
+    detailPath: 'movie-id'
+  });
+
+  if (!result.hasResource) {
+    console.log('No stream available for this content');
+    return;
+  }
+
+  if (result.isLimited) {
+    console.log(`Limited access: ${result.freeStreamsRemaining} free streams remaining`);
+  }
+}
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
 });
-
-if (!result.hasResource) {
-  console.log('No stream available for this content');
-  return;
-}
-
-if (result.isLimited) {
-  console.log(`Limited access: ${result.freeStreamsRemaining} free streams remaining`);
-}
 ```
 
 ### Get Subtitles/Captions
 
 ```typescript
-const result = await getMovieStreamUrl(session, {
-  detailPath: 'movie-id'
-});
+import { getMovieStreamUrl } from '@weroperking/invenio-scraper';
 
-console.log('Available subtitles:');
-for (const caption of result.captions) {
-  console.log(`  ${caption.language} (${caption.languageCode})`);
-  console.log(`    URL: ${caption.url}`);
-  console.log(`    Size: ${caption.sizeBytes} bytes`);
+async function main(): Promise<void> {
+  const result = await getMovieStreamUrl(session, {
+    detailPath: 'movie-id'
+  });
+
+  console.log('Available subtitles:');
+  for (const caption of result.captions) {
+    console.log(`  ${caption.language} (${caption.languageCode})`);
+    console.log(`    URL: ${caption.url}`);
+    console.log(`    Size: ${caption.sizeBytes} bytes`);
+  }
 }
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
+});
 ```
 
 ---

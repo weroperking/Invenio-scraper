@@ -1,11 +1,11 @@
-# 🎬 invenio-scraper
+# 🎬 @weroperking/invenio-scraper
 
-[![npm version](https://img.shields.io/npm/v/invenio-scraper)](https://www.npmjs.com/package/invenio-scraper)
+[![npm version](https://img.shields.io/npm/v/@weroperking/invenio-scraper)](https://www.npmjs.com/package/@weroperking/invenio-scraper)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)](https://nodejs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)](https://www.typescriptlang.org)
 
-**invenio-scraper - A web scraping library for extracting movie and TV show data**
+**@weroperking/invenio-scraper - A web scraping library for extracting movie and TV show data**
 
 A resilient, fully-typed JavaScript SDK for interacting with Moviebox APIs.
 
@@ -23,15 +23,15 @@ A resilient, fully-typed JavaScript SDK for interacting with Moviebox APIs.
 ## 📦 Installation
 
 ```bash
-npm install invenio-scraper
+npm install @weroperking/invenio-scraper
 ```
 
 ```bash
-pnpm add invenio-scraper
+pnpm add @weroperking/invenio-scraper
 ```
 
 ```bash
-yarn add invenio-scraper
+yarn add @weroperking/invenio-scraper
 ```
 
 **Requirements:** Node.js 18+
@@ -44,28 +44,60 @@ import {
   search,
   getMovieDetails,
   getMovieStreamUrl
-} from 'invenio-scraper';
+} from '@weroperking/invenio-scraper';
 
-const session = new MovieboxSession();
+async function main(): Promise<void> {
+  const session = new MovieboxSession();
 
-// Search for content
-const results = await search(session, { query: 'Inception' });
-const first = results.results[0];
+  // Search for content
+  const results = await search(session, { query: 'Inception' });
+  const first = results.results[0];
 
-if (first) {
-  // Get detailed movie information
-  const details = await getMovieDetails(session, {
-    detailPath: first.raw.detailPath
-  });
+  if (first) {
+    // Get detailed movie information
+    const details = await getMovieDetails(session, {
+      detailPath: first.raw.detailPath
+    });
 
-  // Get stream URL
-  const stream = await getMovieStreamUrl(session, {
-    detailPath: first.raw.detailPath,
-    quality: 'best'
-  });
+    // Get stream URL
+    const stream = await getMovieStreamUrl(session, {
+      detailPath: first.raw.detailPath,
+      quality: 'best'
+    });
 
-  console.log(`${details.title}: ${stream.stream?.url}`);
+    console.log(`${details.title}: ${stream.stream?.url}`);
+  }
 }
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
+});
+```
+
+## 🏃 Running TypeScript Files
+
+This SDK is written in TypeScript. To run TypeScript files directly, use [`tsx`](https://github.com/privatenumber/tsx):
+
+```bash
+# Install tsx globally
+npm install -g tsx
+
+# Or add to your project
+npm install -D tsx
+
+# Run a TypeScript file
+tsx your-script.ts
+```
+
+Alternatively, you can compile TypeScript to JavaScript using `tsc` and run with `node`:
+
+```bash
+# Compile TypeScript
+npx tsc your-script.ts
+
+# Run the compiled JavaScript
+node your-script.js
 ```
 
 ## 📚 API Overview
@@ -87,7 +119,7 @@ if (first) {
 ### Session Options
 
 ```typescript
-import { MovieboxSession, createLogger } from 'invenio-scraper';
+import { MovieboxSession, createLogger } from '@weroperking/invenio-scraper';
 
 const session = new MovieboxSession({
   host: 'h5.aoneroom.com',
@@ -126,74 +158,95 @@ const session = new MovieboxSession({
 ### Basic Search
 
 ```typescript
-import { MovieboxSession, search } from 'invenio-scraper';
+import { MovieboxSession, search } from '@weroperking/invenio-scraper';
 
-const session = new MovieboxSession();
+async function main(): Promise<void> {
+  const session = new MovieboxSession();
 
-// Search with filters
-const results = await search(session, {
-  query: 'The Matrix',
-  type: 'movie', // 'all' | 'movie' | 'tv' | 'music'
-  page: 1,
-  perPage: 20
-});
+  // Search with filters
+  const results = await search(session, {
+    query: 'The Matrix',
+    type: 'movie', // 'all' | 'movie' | 'tv' | 'music'
+    page: 1,
+    perPage: 20
+  });
 
-console.log(`Found ${results.totalCount} results`);
-console.log(`Has more: ${results.hasMore}`);
+  console.log(`Found ${results.totalCount} results`);
+  console.log(`Has more: ${results.hasMore}`);
 
-for (const item of results.results) {
-  console.log(`${item.title} (${item.releaseYear ?? 'N/A'}) - ${item.rating}/10`);
+  for (const item of results.results) {
+    console.log(`${item.title} (${item.releaseYear ?? 'N/A'}) - ${item.rating}/10`);
+  }
 }
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
+});
 ```
 
 ### Getting Movie Details
 
 ```typescript
-import { MovieboxSession, getMovieDetails } from 'invenio-scraper';
+import { MovieboxSession, getMovieDetails } from '@weroperking/invenio-scraper';
 
-const session = new MovieboxSession();
+async function main(): Promise<void> {
+  const session = new MovieboxSession();
 
-const details = await getMovieDetails(session, {
-  detailPath: 'inception-e1BOR6f19C7'
+  const details = await getMovieDetails(session, {
+    detailPath: 'inception-e1BOR6f19C7'
+  });
+
+  console.log(`Title: ${details.title}`);
+  console.log(`Synopsis: ${details.synopsis}`);
+  console.log(`Rating: ${details.rating}/10 (${details.ratingCount} votes)`);
+  console.log(`Duration: ${details.durationLabel}`);
+  console.log(`Genres: ${details.genres.join(', ')}`);
+
+  // Available download qualities
+  for (const download of details.downloads) {
+    console.log(`${download.quality}: ${(download.sizeBytes / 1024 / 1024).toFixed(1)} MB`);
+  }
+
+  // Available subtitles
+  for (const caption of details.captions) {
+    console.log(`Subtitle: ${caption.language}`);
+  }
+}
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
 });
-
-console.log(`Title: ${details.title}`);
-console.log(`Synopsis: ${details.synopsis}`);
-console.log(`Rating: ${details.rating}/10 (${details.ratingCount} votes)`);
-console.log(`Duration: ${details.durationLabel}`);
-console.log(`Genres: ${details.genres.join(', ')}`);
-
-// Available download qualities
-for (const download of details.downloads) {
-  console.log(`${download.quality}: ${(download.sizeBytes / 1024 / 1024).toFixed(1)} MB`);
-}
-
-// Available subtitles
-for (const caption of details.captions) {
-  console.log(`Subtitle: ${caption.language}`);
-}
 ```
 
 ### Downloading with Progress
 
 ```typescript
-import { MovieboxSession, downloadMovie } from 'invenio-scraper';
+import { MovieboxSession, downloadMovie } from '@weroperking/invenio-scraper';
 
-const session = new MovieboxSession();
+async function main(): Promise<void> {
+  const session = new MovieboxSession();
 
-const filePath = await downloadMovie(session, {
-  detailPath: 'inception-e1BOR6f19C7',
-  quality: 1080, // or 'best' | 'worst' | number
-  outputDir: './downloads',
-  mode: 'resume', // 'auto' | 'resume' | 'overwrite'
-  onProgress: ({ downloadedBytes, totalBytes, percentage }) => {
-    const mb = (downloadedBytes / 1024 / 1024).toFixed(1);
-    const total = ((totalBytes ?? 0) / 1024 / 1024).toFixed(1);
-    process.stdout.write(`\r${mb}MB / ${total}MB (${percentage ?? 0}%)`);
-  }
+  const filePath = await downloadMovie(session, {
+    detailPath: 'inception-e1BOR6f19C7',
+    quality: 1080, // or 'best' | 'worst' | number
+    outputDir: './downloads',
+    mode: 'resume', // 'auto' | 'resume' | 'overwrite'
+    onProgress: ({ downloadedBytes, totalBytes, percentage }) => {
+      const mb = (downloadedBytes / 1024 / 1024).toFixed(1);
+      const total = ((totalBytes ?? 0) / 1024 / 1024).toFixed(1);
+      process.stdout.write(`\r${mb}MB / ${total}MB (${percentage ?? 0}%)`);
+    }
+  });
+
+  console.log(`\nSaved to: ${filePath}`);
+}
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
 });
-
-console.log(`\nSaved to: ${filePath}`);
 ```
 
 ### Series & Episodes
@@ -206,58 +259,65 @@ import {
   getEpisodeQualities,
   getEpisodeStreamUrl,
   downloadEpisode
-} from 'invenio-scraper';
+} from '@weroperking/invenio-scraper';
 
-const session = new MovieboxSession();
+async function main(): Promise<void> {
+  const session = new MovieboxSession();
 
-// Search for a series
-const results = await search(session, { query: 'Breaking Bad', type: 'tv' });
-const series = results.results.find(r => r.type === 'tv');
+  // Search for a series
+  const results = await search(session, { query: 'Breaking Bad', type: 'tv' });
+  const series = results.results.find(r => r.type === 'tv');
 
-if (series) {
-  // Get series details
-  const details = await getSeriesDetails(session, {
-    detailPath: series.raw.detailPath
-  });
+  if (series) {
+    // Get series details
+    const details = await getSeriesDetails(session, {
+      detailPath: series.raw.detailPath
+    });
 
-  console.log(`${details.title} — ${details.seasons?.length} seasons`);
+    console.log(`${details.title} — ${details.seasons?.length} seasons`);
 
-  // Get episode qualities
-  const qualities = await getEpisodeQualities(session, {
-    detailPath: series.raw.detailPath,
-    season: 1,
-    episode: 1
-  });
+    // Get episode qualities
+    const qualities = await getEpisodeQualities(session, {
+      detailPath: series.raw.detailPath,
+      season: 1,
+      episode: 1
+    });
 
-  console.log('Available qualities:', qualities.downloads.map(d => d.quality));
+    console.log('Available qualities:', qualities.downloads.map(d => d.quality));
 
-  // Get stream URL
-  const stream = await getEpisodeStreamUrl(session, {
-    detailPath: series.raw.detailPath,
-    season: 1,
-    episode: 1,
-    quality: 'best'
-  });
+    // Get stream URL
+    const stream = await getEpisodeStreamUrl(session, {
+      detailPath: series.raw.detailPath,
+      season: 1,
+      episode: 1,
+      quality: 'best'
+    });
 
-  console.log('Stream URL:', stream.stream?.url);
+    console.log('Stream URL:', stream.stream?.url);
 
-  // Download episode
-  const filePath = await downloadEpisode(session, {
-    detailPath: series.raw.detailPath,
-    season: 1,
-    episode: 1,
-    quality: 720,
-    outputDir: './downloads'
-  });
+    // Download episode
+    const filePath = await downloadEpisode(session, {
+      detailPath: series.raw.detailPath,
+      season: 1,
+      episode: 1,
+      quality: 720,
+      outputDir: './downloads'
+    });
 
-  console.log('Downloaded:', filePath);
+    console.log('Downloaded:', filePath);
+  }
 }
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
+});
 ```
 
 ### Proxy Configuration
 
 ```typescript
-import { MovieboxSession } from 'invenio-scraper';
+import { MovieboxSession } from '@weroperking/invenio-scraper';
 
 // HTTP proxy
 const session = new MovieboxSession({
@@ -286,31 +346,39 @@ import {
   GeoBlockedError,
   MirrorExhaustedError,
   RetryLimitExceededError
-} from 'invenio-scraper';
+} from '@weroperking/invenio-scraper';
 
-const session = new MovieboxSession();
+async function main(): Promise<void> {
+  const session = new MovieboxSession();
 
-try {
-  const results = await search(session, { query: 'Inception' });
-} catch (error) {
-  if (error instanceof GeoBlockedError) {
-    console.error('Content is geo-blocked in your region');
-  } else if (error instanceof MirrorExhaustedError) {
-    console.error('All mirrors failed:', error.failures);
-  } else if (error instanceof RetryLimitExceededError) {
-    console.error(`Failed after ${error.attempts} attempts`);
-  } else if (error instanceof MovieboxHttpError) {
-    console.error(`HTTP ${error.status} error for ${error.url}`);
-  } else if (error instanceof MovieboxApiError) {
-    console.error('API error:', error.message);
+  try {
+    const results = await search(session, { query: 'Inception' });
+    console.log(`Found ${results.totalCount} results`);
+  } catch (error) {
+    if (error instanceof GeoBlockedError) {
+      console.error('Content is geo-blocked in your region');
+    } else if (error instanceof MirrorExhaustedError) {
+      console.error('All mirrors failed:', error.failures);
+    } else if (error instanceof RetryLimitExceededError) {
+      console.error(`Failed after ${error.attempts} attempts`);
+    } else if (error instanceof MovieboxHttpError) {
+      console.error(`HTTP ${error.status} error for ${error.url}`);
+    } else if (error instanceof MovieboxApiError) {
+      console.error('API error:', error.message);
+    }
   }
 }
+
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
+});
 ```
 
 ### Custom Logger
 
 ```typescript
-import { MovieboxSession, createLogger, createNoopLogger } from 'invenio-scraper';
+import { MovieboxSession, createLogger, createNoopLogger } from '@weroperking/invenio-scraper';
 
 // Enable logging
 const session = new MovieboxSession({
@@ -350,7 +418,7 @@ import type {
   StreamResult,
   DownloadProgress,
   Logger
-} from 'invenio-scraper';
+} from '@weroperking/invenio-scraper';
 ```
 
 ## 📄 Documentation

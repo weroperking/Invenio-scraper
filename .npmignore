@@ -11,7 +11,7 @@ docs/
 vitest.config.ts
 tsconfig.json
 tsconfig.dev.json
-.eslintrc.cjs
+.eslintrc.json
 .prettierrc.json
 
 # Git
@@ -36,6 +36,13 @@ coverage/
 
 # Test fixtures
 src/__fixtures__/
+
+# Test files in dist (should not be published)
+dist/**/*.test.js
+dist/**/*.test.js.map
+dist/**/*.test.d.ts
+dist/**/*.test.d.ts.map
+dist/__fixtures__/
 
 # Documentation
 CHANGELOG.md

@@ -2,6 +2,8 @@
 
 This guide covers advanced session configuration, including mirror fallback, retry policies, cookie management, and proxy configuration.
 
+> **Note:** Use `tsx` to run TypeScript files directly. For example: `npx tsx your-script.ts`
+
 ---
 
 ## Table of Contents
@@ -20,7 +22,7 @@ This guide covers advanced session configuration, including mirror fallback, ret
 The `MovieboxSession` class manages all HTTP communication with the MovieBox API. Create a single instance and reuse it throughout your application.
 
 ```typescript
-import { MovieboxSession, createLogger } from 'moviebox-js-sdk';
+import { MovieboxSession, createLogger } from '@weroperking/invenio-scraper';
 
 const session = new MovieboxSession({
   logger: createLogger({ level: 'info' })
@@ -34,6 +36,8 @@ const session = new MovieboxSession({
 ### Basic Configuration
 
 ```typescript
+import { createLogger } from '@weroperking/invenio-scraper';
+
 const session = new MovieboxSession({
   // Host configuration
   host: 'h5.aoneroom.com',
@@ -47,7 +51,7 @@ const session = new MovieboxSession({
 ### Full Configuration
 
 ```typescript
-import { MovieboxSession, createLogger } from 'moviebox-js-sdk';
+import { MovieboxSession, createLogger } from '@weroperking/invenio-scraper';
 
 const session = new MovieboxSession({
   // Connection
@@ -308,7 +312,7 @@ For more complex proxy setups, use a custom undici dispatcher:
 
 ```typescript
 import { ProxyAgent } from 'undici';
-import { MovieboxSession } from 'moviebox-js-sdk';
+import { MovieboxSession } from '@weroperking/invenio-scraper';
 
 const dispatcher = new ProxyAgent({
   uri: 'http://proxy.example.com:8080',
@@ -331,7 +335,7 @@ For more proxy configuration options, see [Proxy Configuration](../proxy.md).
 Enable logging to debug issues:
 
 ```typescript
-import { createLogger } from 'moviebox-js-sdk';
+import { createLogger } from '@weroperking/invenio-scraper';
 
 const session = new MovieboxSession({
   logger: createLogger({
@@ -413,7 +417,7 @@ const session = new MovieboxSession({
 ### 3. Handle Errors Appropriately
 
 ```typescript
-import { GeoBlockedError, MirrorExhaustedError } from 'moviebox-js-sdk';
+import { GeoBlockedError, MirrorExhaustedError } from '@weroperking/invenio-scraper';
 
 try {
   const result = await getMovieDetails(session, { detailPath: 'movie' });

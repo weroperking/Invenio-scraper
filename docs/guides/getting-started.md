@@ -1,6 +1,6 @@
 # Getting Started
 
-This guide will help you get started with the MovieBox JS SDK, from installation to making your first API call.
+This guide will help you get started with the Invenio Scraper SDK, from installation to making your first API call.
 
 ---
 
@@ -44,24 +44,26 @@ corepack enable
 ### Install from npm
 
 ```bash
-pnpm add moviebox-js-sdk
+pnpm add @weroperking/invenio-scraper
 ```
 
 ### Install from GitHub (Latest Development Version)
 
 ```bash
-pnpm add github:pythonvista/moviebox-js-sdk
+pnpm add github:weroperking/invenio-scraper
 ```
 
 ### Verify Installation
 
 ```typescript
 // Check that the SDK loads correctly
-import { MovieboxSession } from 'moviebox-js-sdk';
+import { MovieboxSession } from '@weroperking/invenio-scraper';
 
 const session = new MovieboxSession();
 console.log('SDK loaded successfully');
 ```
+
+> **Note:** Use `tsx` to run TypeScript files directly. For example: `npx tsx your-script.ts`
 
 ---
 
@@ -72,7 +74,7 @@ console.log('SDK loaded successfully');
 The `MovieboxSession` is the main entry point for all SDK operations. Create one instance and reuse it throughout your application.
 
 ```typescript
-import { MovieboxSession, createLogger } from 'moviebox-js-sdk';
+import { MovieboxSession, createLogger } from '@weroperking/invenio-scraper';
 
 // Create a session with optional configuration
 const session = new MovieboxSession({
@@ -92,7 +94,7 @@ const session = new MovieboxSession({
 Here's a more complete configuration:
 
 ```typescript
-import { MovieboxSession, createLogger } from 'moviebox-js-sdk';
+import { MovieboxSession, createLogger } from '@weroperking/invenio-scraper';
 
 const session = new MovieboxSession({
   // Connection options
@@ -139,9 +141,9 @@ const session = new MovieboxSession({
 ### Step 1: Search for Content
 
 ```typescript
-import { MovieboxSession, search, createLogger } from 'moviebox-js-sdk';
+import { MovieboxSession, search, createLogger } from '@weroperking/invenio-scraper';
 
-async function main() {
+async function main(): Promise<void> {
   // Create session
   const session = new MovieboxSession({
     logger: createLogger({ level: 'info' })
@@ -168,15 +170,18 @@ async function main() {
   }
 }
 
-main().catch(console.error);
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
+});
 ```
 
 ### Step 2: Get Movie Details
 
 ```typescript
-import { MovieboxSession, search, getMovieDetails, createLogger } from 'moviebox-js-sdk';
+import { MovieboxSession, search, getMovieDetails, createLogger } from '@weroperking/invenio-scraper';
 
-async function getMovieInfo() {
+async function main(): Promise<void> {
   const session = new MovieboxSession({
     logger: createLogger({ level: 'info' })
   });
@@ -214,16 +219,19 @@ async function getMovieInfo() {
   }
 }
 
-getMovieInfo().catch(console.error);
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
+});
 ```
 
 ### Step 3: Stream or Download
 
 ```typescript
-import { MovieboxSession, getMovieDetails, getMovieStreamUrl, downloadMovie, createLogger } from 'moviebox-js-sdk';
+import { MovieboxSession, getMovieDetails, getMovieStreamUrl, downloadMovie, createLogger } from '@weroperking/invenio-scraper';
 import { createWriteStream } from 'node:fs';
 
-async function streamOrDownload() {
+async function main(): Promise<void> {
   const session = new MovieboxSession({
     logger: createLogger({ level: 'info' })
   });
@@ -262,7 +270,10 @@ async function streamOrDownload() {
   console.log(`Downloaded to: ${destination}`);
 }
 
-streamOrDownload().catch(console.error);
+main().catch((error) => {
+  console.error('Error:', error);
+  process.exit(1);
+});
 ```
 
 ---
@@ -330,6 +341,6 @@ All configured mirror hosts failed. Check your network connection or try differe
 
 ## Getting Help
 
-- **Issues**: [GitHub Issues](https://github.com/pythonvista/moviebox-js-sdk/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/pythonvista/moviebox-js-sdk/discussions)
+- **Issues**: [GitHub Issues](https://github.com/weroperking/invenio-scraper/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/weroperking/invenio-scraper/discussions)
 - **Documentation**: See other docs in the `docs/` folder
