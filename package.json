@@ -1,5 +1,5 @@
 {
-  "name": "invenio-scraper",
+  "name": "@weroperking/invenio-scraper",
   "version": "1.0.0",
   "description": "invenio-scraper - A web scraping library for extracting movie and TV show data",
   "type": "module",
@@ -66,8 +66,8 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^24.10.1",
-    "@typescript-eslint/eslint-plugin": "^8.46.4",
-    "@typescript-eslint/parser": "^8.46.4",
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
